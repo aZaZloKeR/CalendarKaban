@@ -1,0 +1,6 @@
+GET http://localhost:8081/users email=invalid
+
+###
+
+GET http://localhost:8081/hello
+

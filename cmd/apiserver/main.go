@@ -7,9 +7,8 @@ import (
 
 func main() {
 	cfg := apiserver.GetConfig()
-	s := apiserver.New(cfg)
 
-	if err := s.Start(); err != nil {
+	if err := apiserver.Start(cfg); err != nil {
 		log.Fatal(err)
 	}
 }
