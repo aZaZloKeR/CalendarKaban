@@ -1,5 +1,5 @@
 package store
 
 type Store interface {
-	getUserRepo() *UserRepository
+	GetUserRepo() UserRepository
 }

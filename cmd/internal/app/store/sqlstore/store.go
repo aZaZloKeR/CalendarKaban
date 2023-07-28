@@ -16,7 +16,7 @@ func New(db *sql.DB) *Store {
 	}
 }
 
-func (s *Store) getUserRepo() *store.UserRepository {
+func (s *Store) GetUserRepo() store.UserRepository {
 	if s.userRepo != nil {
 		return s.userRepo
 	}

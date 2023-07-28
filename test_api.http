@@ -1,4 +1,10 @@
-GET http://localhost:8081/users email=invalid
+POST http://localhost:8081/users
+Accept: application/json
+{
+"username": "kiyootaaka",
+"email": "kiyootaaka@doto",
+"password": "kiyootaaka"
+}
 
 ###
 

@@ -1,3 +1,4 @@
 bindAddr: :8081
 logLevel: debug
 databaseURL: host=localhost user=postgres dbname=postgres password=Fpfpkjrth!23 sslmode=disable
+sessionStore: awdawdfkwiour1923ue12u1

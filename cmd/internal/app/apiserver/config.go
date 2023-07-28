@@ -10,6 +10,7 @@ type Config struct {
 	BindAddr    string `yaml:"bindAddr"`
 	LogLevel    string `yaml:"logLevel"`
 	DatabaseURL string `yaml:"databaseURL"`
+	SessionKey  string `yaml:"sessionKey"`
 }
 
 var instance *Config
