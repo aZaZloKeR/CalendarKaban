@@ -36,3 +36,19 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	}
 	return u, nil
 }
+
+func (r *UserRepository) FindById(id int) (*model.User, error) {
+	u := &model.User{}
+
+	if err := r.store.db.QueryRow(
+		"Select id, username, email, password FROM calendar.user WHERE id = $1", id,
+	).Scan(
+		&u.ID,
+		&u.Username,
+		&u.Email,
+		&u.Password,
+	); err != nil {
+		return nil, err
+	}
+	return u, nil
+}

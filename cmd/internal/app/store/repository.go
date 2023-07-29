@@ -5,4 +5,5 @@ import "github.com/aZaZloKeR/CalendarKaban/cmd/internal/app/model"
 type UserRepository interface {
 	Create(u *model.User) error
 	FindByEmail(email string) (*model.User, error)
+	FindById(id int) (*model.User, error)
 }
