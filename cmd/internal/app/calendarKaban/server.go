@@ -112,8 +112,6 @@ func (s *server) handleCalendarPage() http.HandlerFunc {
 	}
 }
 
-// @Accept json
-// @Router /session [post]
 func (s *server) handlerSessionCreate() http.HandlerFunc {
 	type request struct {
 		Email    string `json:"email"`
@@ -146,8 +144,6 @@ func (s *server) handlerSessionCreate() http.HandlerFunc {
 
 }
 
-// @Accept json
-// @Router /users [post]
 func (s *server) handlerUsersCreate() http.HandlerFunc {
 	type request struct {
 		Username string `json:"username"`
