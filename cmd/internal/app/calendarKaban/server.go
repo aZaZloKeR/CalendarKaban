@@ -1,4 +1,4 @@
-package apiserver
+package calendarKaban
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/sirupsen/logrus"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
 	"time"
 )
@@ -59,17 +60,60 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/users", s.handlerUsersCreate()).Methods(http.MethodPost)
 	s.router.HandleFunc("/sessions", s.handlerSessionCreate()).Methods(http.MethodPost)
 
-	private := s.router.PathPrefix("/private").Subrouter()
+	s.router.HandleFunc("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8081/swagger/doc.json"), //The url pointing to API definition
+	))
+
+	private := s.router.PathPrefix("/calendar").Subrouter()
 	private.Use(s.authenticateUser)
-	private.HandleFunc("/calendar", s.handleCalendarPage()).Methods(http.MethodGet)
+	private.HandleFunc("/event", s.handleCalendarPage()).Methods(http.MethodPost)
 }
 func (s *server) handleCalendarPage() http.HandlerFunc {
-
+	type request struct {
+		Date        time.Time `json:"date"`
+		TimeStart   time.Time `json:"timeStart"`
+		TimeEnd     time.Time `json:"timeEnd"`
+		Name        string    `json:"name"`
+		Description string    `json:"description"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+		req := &request{}
+
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		allRows := s.store.GetEventRepo().CountRows()
+		event := model.Event{
+			Date:      req.Date,
+			TimeStart: req.TimeStart,
+			TimeEnd:   req.TimeEnd,
+			UserId:    r.Context().Value(ctxKeyUser).(*model.User).ID,
+		}
+
+		suitableRows, err := s.store.GetEventRepo().CountSuitableRows(event)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		if suitableRows != allRows {
+			s.error(w, r, http.StatusBadRequest, errors.New("выбранный промежуток времени уже занят на данное число"))
+			return
+		}
+
+		if err = s.store.GetEventRepo().Create(&event); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, nil)
 	}
 }
 
+// @Accept json
+// @Router /session [post]
 func (s *server) handlerSessionCreate() http.HandlerFunc {
 	type request struct {
 		Email    string `json:"email"`
@@ -102,6 +146,8 @@ func (s *server) handlerSessionCreate() http.HandlerFunc {
 
 }
 
+// @Accept json
+// @Router /users [post]
 func (s *server) handlerUsersCreate() http.HandlerFunc {
 	type request struct {
 		Username string `json:"username"`

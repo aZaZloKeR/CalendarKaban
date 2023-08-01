@@ -1,14 +1,15 @@
-package apiserver
+package calendarKaban
 
 import (
 	"database/sql"
+	"github.com/aZaZloKeR/CalendarKaban/cmd/internal/app/config"
 	"github.com/aZaZloKeR/CalendarKaban/cmd/internal/app/store/sqlstore"
 	"github.com/gorilla/sessions"
 	_ "github.com/lib/pq" // ...
 	"net/http"
 )
 
-func Start(config *Config) error {
+func Start(config *config.Config) error {
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err

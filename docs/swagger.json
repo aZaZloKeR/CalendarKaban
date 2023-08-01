@@ -1,0 +1,28 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Календарь",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/",
+    "paths": {
+        "/session": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/users": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        }
+    }
+}

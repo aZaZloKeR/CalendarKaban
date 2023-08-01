@@ -7,3 +7,10 @@ type UserRepository interface {
 	FindByEmail(email string) (*model.User, error)
 	FindById(id int) (*model.User, error)
 }
+
+type EventRepository interface {
+	Create(u *model.Event) error
+	FindById(id int) (*model.Event, error)
+	CountSuitableRows(event model.Event) (int, error)
+	CountRows() int
+}

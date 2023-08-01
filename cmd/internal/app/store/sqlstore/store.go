@@ -6,8 +6,9 @@ import (
 )
 
 type Store struct {
-	db       *sql.DB
-	userRepo *UserRepository
+	db        *sql.DB
+	userRepo  *UserRepository
+	eventRepo *EventRepository
 }
 
 func New(db *sql.DB) *Store {
@@ -24,4 +25,14 @@ func (s *Store) GetUserRepo() store.UserRepository {
 		store: s,
 	}
 	return s.userRepo
+}
+
+func (s *Store) GetEventRepo() store.EventRepository {
+	if s.eventRepo != nil {
+		return s.eventRepo
+	}
+	s.eventRepo = &EventRepository{
+		store: s,
+	}
+	return s.eventRepo
 }

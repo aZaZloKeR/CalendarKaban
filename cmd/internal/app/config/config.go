@@ -1,4 +1,4 @@
-package apiserver
+package config
 
 import (
 	"github.com/ilyakaznacheev/cleanenv"
@@ -16,7 +16,7 @@ type Config struct {
 var instance *Config
 var once sync.Once
 
-func GetConfig() *Config {
+func NewConfig() *Config {
 	once.Do(func() {
 		log.Print("read application configuration")
 		instance = &Config{}
